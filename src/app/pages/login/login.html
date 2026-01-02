@@ -1,0 +1,50 @@
+<div class="parent">
+  <div class="flip-container" id="flipBox">
+    <div class="flip-inner">
+        @if(toggleForm){
+        <!-- Login Form -->
+            <div class="flip-front">
+                <div class="logo-container">
+                  <img src="/tecnoyalogo.png"   alt="Tecnoyá CDA"  class="app-logo" />
+                </div>
+               
+                <form>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="text" placeholder="Usuario" [(ngModel)] ="loginObj.UserName" name="usernameLogin" required />
+                    <!-- <input type="email" placeholder="Email" required /> -->
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" placeholder="Contraseña" name="passwordLogin" [(ngModel)] ="loginObj.Password" required />
+                </div>
+                <button type="button" (click) ="onLogin()">Ingresar</button>
+                </form>
+                <!-- <div class="switch-link" id="toSignup" (click) = "toggleForm = false">No estas registrado? Registrate</div> -->
+            </div>
+        }@else{
+        <!-- Signup Form -->
+            <div class="flip-back">
+                <h2>Crear cuenta</h2>
+                <form>
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" placeholder="Full Name" name="fullName" [(ngModel)] ="registerObj.UserName" required />
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" placeholder="Email" required />
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" placeholder="Password" name="password" [(ngModel)] ="registerObj.PasswordHash" required />
+                </div>
+                <button type="button" (click) ="onRegister()">Registrarse</button>
+                </form>
+                <div class="switch-link" id="toLogin" (click) = "toggleForm = true">Ya estas registrado? Ingresa</div>
+            </div>
+        }
+    </div>
+  </div>
+</div>
+

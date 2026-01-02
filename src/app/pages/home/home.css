@@ -1,0 +1,11 @@
+.navbar-logo {
+  height: 48px;        /* tamaño ideal */
+  max-height: 60px;
+  width: auto;         /* mantiene proporción */
+  object-fit: contain;
+}
+
+.navbar-logo-container {
+  display: flex;
+  align-items: center;
+}

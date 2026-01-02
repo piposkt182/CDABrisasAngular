@@ -1,0 +1,156 @@
+<!-- ========================= -->
+<!-- Filtros -->
+<!-- ========================= -->
+<div class="filters-bar">
+
+  <div class="filters">
+    <button
+      type="button"
+      class="filter-btn pending"
+      [class.active]="activeFilters.pending"
+      (click)="toggleFilter('pending')">
+      ⏳ Pendientes
+    </button>
+
+    <button
+      type="button"
+      class="filter-btn review"
+      [class.active]="activeFilters.review"
+      (click)="toggleFilter('review')">
+      🔍 En revisión
+    </button>
+
+    <button
+      type="button"
+      class="filter-btn paid"
+      [class.active]="activeFilters.paid"
+      (click)="toggleFilter('paid')">
+      ✅ Pagados
+    </button>
+
+    <button
+      type="button"
+      class="filter-btn rejected"
+      [class.active]="activeFilters.rejected"
+      (click)="toggleFilter('rejected')">
+      ❌ Rechazados
+    </button>
+  </div>
+
+  <div class="excel-upload">
+    <button
+      type="button"
+      class="btn-sync"
+      [disabled]="uploadStatus === 'loading'"
+      (click)="syncData()"
+    >
+      <span class="icon excel-icon" aria-hidden="true">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 .34-.03.67-.08 1h2.02c.04-.33.06-.66.06-1 0-4.42-3.58-8-8-8zm-6 7c0-.34.03-.67.08-1H4.06C4.02 10.33 4 10.66 4 11c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6z"/>
+    </svg>
+      </span>
+      {{ uploadStatus === 'loading' ? 'Sincronizando...' : 'Sincronizar' }}
+    </button>
+
+    <input
+      type="file"
+      accept=".xlsx,.xls"
+      #excelInput
+      hidden
+      (change)="onExcelSelected($event)"
+    />
+
+    <button
+      type="button"
+      class="btn-excel"
+      [disabled]="uploadStatus === 'loading'"
+      (click)="excelInput.click()"
+    >
+      <span class="icon excel-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+         <path d="M19 2H8c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h2v3c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM8 4h11v16H8v-2h2l3-4-3-4H8V4zm-2 7h2l2 3-2 3H6l2-3-2-3z"/>
+        </svg>
+      </span>
+      {{ uploadStatus === 'loading' ? 'Subiendo...' : 'Excel' }}
+    </button>
+
+     <button
+      *ngIf="hasSelectedMessages"
+      type="button"
+      class="btn-paid-action"
+      (click)="markSelectedAsPaid()">✅ Pagados
+     </button>
+  </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- Tabla de usuarios -->
+<!-- ========================= -->
+<table class="users-table">
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Número</th>
+      <th>Mensaje</th>
+      <th>Estado</th>
+      <th>Foto</th>
+      <th>Seleccionar</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <ng-container *ngFor="let user of filteredUsers; trackBy: trackByUserId">
+
+      <!-- Solo usuarios con mensajes -->
+      <ng-container *ngIf="user.messages && user.messages.length > 0">
+
+        <tr *ngFor="let msg of user.messages; trackBy: trackByMessageId">
+
+          <td>{{ user.name }}</td>
+          <td>{{ user.ws_Id }}</td>
+          <td>{{ msg.text || '—' }}</td>
+
+          <td>
+            <span
+              class="badge"
+              [ngClass]="{
+                'badge-pending': msg.paymentStatusId === 1,
+                'badge-review': msg.paymentStatusId === 3,
+                'badge-paid': msg.paymentStatusId === 2, 
+                'badge-rejected': msg.paymentStatusId === 4
+              }">
+              {{ msg.paymentStatus?.name }}
+            </span>
+          </td>
+
+          <td class="zoom-popup-container">
+            <ng-container *ngIf="msg.imageUrl; else noImage">
+              <img
+                class="thumb"
+                [src]="msg.imageUrl"
+                alt="Imagen"
+              />
+              <div class="zoom-popup">
+                <img [src]="msg.imageUrl" />
+              </div>
+            </ng-container>
+
+            <ng-template #noImage>—</ng-template>
+          </td>
+          <td class="select-cell">
+            <ng-container *ngIf="msg.paymentStatusId !== 2 && msg.paymentStatusId !== 1; else noCheckbox">
+              <input
+                type="checkbox"
+                class="row-checkbox"
+                [(ngModel)]="msg.selected"
+              />
+            </ng-container>
+
+            <ng-template #noCheckbox></ng-template>
+          </td>
+        </tr>
+      </ng-container>
+    </ng-container>
+  </tbody>
+</table>

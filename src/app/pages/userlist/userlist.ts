@@ -1,0 +1,191 @@
+import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { UsersModificationResultDto } from '../../dto/UsersModificationResultDto';
+import { environment } from './../../../environments/environment'
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-userlist',
+  standalone: true,
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    FormsModule
+  ],
+  templateUrl: './userlist.html',
+  styleUrl: './userlist.css'
+})
+export class Userlist implements OnInit {
+
+  private readonly baseUrl = environment.API_URL;
+  userList: any[] = [];
+  uploadStatus: 'idle' | 'loading' | 'success' | 'warning'| 'error' = 'idle';
+  activeTab: 'idle' | 'pending' | 'review' | 'paid'| 'rejected' |'error' = 'idle';
+  uploadMessage = '';
+  activeFilters = {
+    pending: false,
+    review: false,
+    paid: false,
+    rejected:false
+  };
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit(): void {
+    this.getUsers();
+  }
+
+
+trackByMessageId(index: number, msg: any) {
+  return msg.id;
+}
+
+trackByUserId(index: number, user: any) {
+  return user.id;
+}
+
+ toggleFilter(filter: 'pending' | 'review' | 'paid' | 'rejected') {
+  this.activeFilters[filter] = !this.activeFilters[filter];
+  console.log(this.activeFilters);
+}
+
+  get filteredUsers() {
+    const selectedStatuses: number[] = [];
+
+    if (this.activeFilters.pending) selectedStatuses.push(1);
+    if (this.activeFilters.review) selectedStatuses.push(3);
+    if (this.activeFilters.paid) selectedStatuses.push(2);
+     if (this.activeFilters.rejected) selectedStatuses.push(4);
+
+    // si no hay filtros activos → mostrar todo
+    if (selectedStatuses.length === 0) {
+      return this.userList;
+    }
+
+    return this.userList
+    .map(user => ({
+      ...user,
+      messages: (user.messages ?? []).filter(
+        (msg: any) =>
+          msg &&
+          typeof msg.paymentStatusId === 'number' &&
+          selectedStatuses.includes(msg.paymentStatusId)
+      )
+    }))
+    .filter(user => user.messages.length > 0);
+  }
+
+  getUsers(): void {
+    this.http
+      .get<UsersModificationResultDto>(`${this.baseUrl}/User/GetAllUsersWithMessages`)
+      .subscribe(res => {
+        this.userList = res.users;
+      });
+  }
+
+  uploadAgreementExcel(file: File): Observable<UsersModificationResultDto> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<UsersModificationResultDto>(
+      `${this.baseUrl}/ExcelFile/UploadExcelAgreement`,
+      formData
+    );
+  }
+
+  openImage(url: string): void {
+    window.open(url, '_blank');
+  }
+
+  onExcelSelected(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+
+  if (!file) return;
+
+  // 🔔 MOSTRAR TOAST (LOADING)
+  this.uploadStatus = 'loading';
+  this.uploadMessage = 'Subiendo archivo...';
+
+  this.uploadAgreementExcel(file).subscribe({
+    next: (res) => {
+      this.userList = res.users;
+      if(res.hasChanges){
+        // 🔔 SUCCESS
+        this.uploadStatus = 'success';
+        this.uploadMessage = 'Archivo cargado correctamente';
+      }else{
+        this.uploadStatus = 'warning';
+        this.uploadMessage = 'Archivo cargado pero no se modificaron registros';
+      }
+      
+      // ⏱ dejar visible el toast
+      setTimeout(() => {
+        this.uploadStatus = 'idle';
+        this.uploadMessage = '';
+      }, 5000);
+    },
+    error: (err) => {
+      console.error(err);
+
+      // 🔔 ERROR
+      this.uploadStatus = 'error';
+      this.uploadMessage = 'Error al subir el archivo';
+
+      setTimeout(() => {
+        this.uploadStatus = 'idle';
+        this.uploadMessage = '';
+      }, 5000);
+    }
+  });
+  input.value = '';
+}
+
+get hasSelectedMessages(): boolean {
+  return this.userList?.some(user =>
+    user.messages?.some((msg: any) => msg.selected)
+  ) ?? false;
+}
+
+markSelectedAsPaid(): void {
+  const selectedIds = this.userList
+    .flatMap(user => user.messages ?? [])
+    .filter(msg => msg.selected)
+    .map(msg => msg.id);
+
+  console.log('IDs seleccionados:', selectedIds);
+  if (selectedIds.length === 0) return;
+  this.markMessagesAsPaid(selectedIds);
+}
+
+markMessagesAsPaid(messageIds: number[]): void {
+  this.http
+    .post(`${this.baseUrl}/Message/PaidAgreements`, messageIds)
+    .subscribe({
+      next: () => {
+        console.log('Mensajes marcados como pagados');
+        this.clearSelections();
+        this.getUsers();
+      },
+      error: (err) => {
+        console.error('Error marcando mensajes', err);
+      }
+    });
+}
+
+clearSelections(): void {
+  for (const user of this.userList) {
+    for (const msg of user.messages ?? []) {
+      msg.selected = false;
+    }
+  }
+}
+
+syncData() {
+  debugger;
+  this.getUsers();
+}
+
+}
