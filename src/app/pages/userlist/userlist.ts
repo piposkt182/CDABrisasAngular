@@ -6,6 +6,8 @@ import { UsersModificationResultDto } from '../../dto/UsersModificationResultDto
 import { environment } from './../../../environments/environment'
 import { FormsModule } from '@angular/forms';
 
+
+
 @Component({
   selector: 'app-userlist',
   standalone: true,
@@ -30,6 +32,8 @@ export class Userlist implements OnInit {
     paid: false,
     rejected:false
   };
+  agreements: any[] = [];
+  selectedAgreement: string = '';
 
   constructor(private http: HttpClient) {}
 
@@ -186,6 +190,20 @@ clearSelections(): void {
 syncData() {
   debugger;
   this.getUsers();
+}
+
+onAgreementChange(event: Event) {
+  const value = (event.target as HTMLSelectElement).value;
+  this.selectedAgreement = value;
+
+  this.applyFilters();
+}
+
+applyFilters() {
+  // this.filteredUsers = this.users.filter(user =>
+  //   !this.selectedAgreement ||
+  //   user.agreementName === this.selectedAgreement
+  // );
 }
 
 }

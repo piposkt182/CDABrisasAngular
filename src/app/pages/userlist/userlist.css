@@ -461,3 +461,182 @@ tbody tr:nth-child(even) {
   box-shadow: 0 0 0 4px rgba(180, 35, 24, 0.15);
 }
 
+.agreement-field {
+  min-width: 260px;
+  margin-right: 12px;
+}
+
+mat-option input {
+  padding: 6px 8px;
+}
+
+.agreement-field {
+  min-width: 280px;
+  margin-right: 12px;
+}
+
+/* Panel del dropdown */
+.agreement-panel {
+  padding: 8px !important;
+}
+
+/* Opción del buscador */
+.search-option {
+  height: auto !important;
+  cursor: default;
+}
+
+/* Input de búsqueda */
+.search-input {
+  width: 100%;
+  height: 36px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #d0d5dd;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+/* Opciones */
+.mat-mdc-option {
+  height: 38px;
+}
+
+/* Checkbox más limpio */
+.mat-pseudo-checkbox {
+  transform: scale(1.05);
+}
+
+.agreement-field {
+  min-width: 300px;
+  margin-right: 12px;
+}
+
+/* Panel */
+.agreement-panel {
+  padding: 8px !important;
+}
+
+/* La fila del buscador (no parece opción) */
+.search-option {
+  height: auto !important;
+  cursor: default !important;
+}
+
+/* Input del buscador */
+.search-input {
+  width: 100%;
+  height: 38px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #d0d5dd;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+/* ============================= */
+/* AGREEMENT DROPDOWN – PREMIUM */
+/* ============================= */
+
+/* Campo principal */
+.agreement-field {
+  min-width: 300px;
+  margin-right: 16px;
+}
+
+.agreement-field .mat-mdc-text-field-wrapper {
+  border-radius: 14px !important;
+  background: #ffffff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.agreement-field .mat-mdc-form-field-outline {
+  border-radius: 14px !important;
+}
+
+/* Label */
+.agreement-field .mat-mdc-floating-label {
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Trigger */
+.agreement-field .mat-mdc-select-trigger {
+  padding: 10px 14px;
+  font-weight: 500;
+}
+
+/* Flecha */
+.agreement-field .mat-mdc-select-arrow {
+  color: #6b7280;
+}
+
+/* Hover */
+.agreement-field:hover .mat-mdc-text-field-wrapper {
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+/* Focus */
+.agreement-field.mat-focused .mat-mdc-text-field-wrapper {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+}
+
+/* ============================= */
+/* PANEL DEL DROPDOWN */
+/* ============================= */
+
+.agreement-panel {
+  padding: 10px !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18) !important;
+}
+
+/* Opciones */
+.agreement-panel .mat-mdc-option {
+  border-radius: 10px;
+  margin: 4px 0;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+/* Hover opción */
+.agreement-panel .mat-mdc-option:hover {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+/* Opción seleccionada */
+.agreement-panel .mat-mdc-option.mdc-list-item--selected {
+  background: rgba(37, 99, 235, 0.15) !important;
+  color: #1d4ed8;
+}
+
+/* Checkbox */
+.agreement-panel .mat-pseudo-checkbox {
+  transform: scale(1.1);
+}
+
+/* ============================= */
+/* TEXTO DEL TRIGGER */
+/* ============================= */
+
+.agreement-field .mat-mdc-select-value-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Contador estilo pill */
+.agreement-field .mat-mdc-select-value-text::after {
+  content: '';
+}
