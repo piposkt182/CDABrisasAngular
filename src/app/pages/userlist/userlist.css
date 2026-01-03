@@ -640,3 +640,156 @@ mat-option input {
 .agreement-field .mat-mdc-select-value-text::after {
   content: '';
 }
+
+
+/* ============================= */
+/* DROPDOWN MATERIAL – BUTTON STYLE */
+/* ============================= */
+
+:host ::ng-deep .agreement-field .mat-mdc-text-field-wrapper {
+  background: #ffffff;
+  border-radius: 999px;
+  border: 2px dashed #21cfe6;
+  box-shadow: none;
+  transition: all 0.25s ease;
+}
+
+/* Hover igual a botones */
+:host ::ng-deep .agreement-field:hover .mat-mdc-text-field-wrapper {
+  background: rgba(117, 199, 236, 0.12);
+}
+
+/* Focus */
+:host ::ng-deep .agreement-field.mat-focused .mat-mdc-text-field-wrapper {
+  box-shadow: 0 0 0 4px rgba(117, 199, 236, 0.25);
+}
+
+/* Texto seleccionado */
+:host ::ng-deep .agreement-field .mat-mdc-select-value {
+  font-weight: 600;
+  font-size: 14px;
+  color: #257c88;
+}
+
+/* Label */
+:host ::ng-deep .agreement-field .mat-mdc-floating-label {
+  font-weight: 600;
+  color: #257c88;
+}
+
+/* Flecha */
+:host ::ng-deep .agreement-field .mat-mdc-select-arrow {
+  color: #257c88;
+}
+
+/* ============================= */
+/* PANEL DEL DROPDOWN */
+/* ============================= */
+
+:host ::ng-deep .cdk-overlay-pane .mat-mdc-select-panel {
+  border-radius: 18px;
+  padding: 8px;
+  background: #ffffff;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+}
+
+/* ============================= */
+/* BUSCADOR */
+/* ============================= */
+
+:host ::ng-deep .ngx-mat-select-search {
+  padding: 10px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+:host ::ng-deep .ngx-mat-select-search input {
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid #d0d5dd;
+  padding: 0 14px;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ============================= */
+/* OPCIONES */
+/* ============================= */
+
+:host ::ng-deep .mat-mdc-option {
+  border-radius: 12px;
+  margin: 4px 0;
+  font-weight: 500;
+  color: #374151;
+}
+
+/* Hover suave */
+:host ::ng-deep .mat-mdc-option:hover {
+  background: rgba(117, 199, 236, 0.12);
+}
+
+/* Seleccionadas */
+:host ::ng-deep .mat-mdc-option.mdc-list-item--selected {
+  background: rgba(22, 163, 74, 0.12);
+  color: #166534;
+}
+
+/* Checkbox */
+:host ::ng-deep .mat-pseudo-checkbox {
+  transform: scale(1.05);
+}
+
+/* ===================================== */
+/* FIX LABEL + OUTLINE MATERIAL */
+/* ===================================== */
+
+/* Mantiene el outline pero invisible */
+:host ::ng-deep .agreement-field .mdc-notched-outline {
+  border-color: transparent !important;
+}
+
+/* Evita borde azul en focus */
+:host ::ng-deep .agreement-field.mat-focused .mdc-notched-outline {
+  border-color: transparent !important;
+}
+
+/* Reposiciona el label para que siempre se vea */
+:host ::ng-deep .agreement-field .mat-mdc-floating-label {
+  transform: translateY(-50%) scale(0.9) !important;
+  top: 50% !important;
+  left: 18px !important;
+  background: transparent !important;
+  pointer-events: none;
+  font-weight: 600;
+  color: #257c88;
+}
+
+/* Cuando tiene valor o focus, mantiene estilo */
+:host ::ng-deep .agreement-field.mat-mdc-form-field-has-value .mat-mdc-floating-label,
+:host ::ng-deep .agreement-field.mat-focused .mat-mdc-floating-label {
+  transform: translateY(-130%) scale(0.8) !important;
+  color: #257c88;
+}
+
+/* ================================================= */
+/* ELIMINAR BORDE OUTLINE SIN ROMPER EL LABEL */
+/* ================================================= */
+
+/* Apaga las 3 partes del outline */
+:host ::ng-deep .agreement-field .mdc-notched-outline__leading,
+:host ::ng-deep .agreement-field .mdc-notched-outline__notch,
+:host ::ng-deep .agreement-field .mdc-notched-outline__trailing {
+  border: none !important;
+}
+
+/* Evita que focus lo vuelva a pintar */
+:host ::ng-deep .agreement-field.mat-focused .mdc-notched-outline__leading,
+:host ::ng-deep .agreement-field.mat-focused .mdc-notched-outline__notch,
+:host ::ng-deep .agreement-field.mat-focused .mdc-notched-outline__trailing {
+  border: none !important;
+}
+
+/* Overlay de focus */
+:host ::ng-deep .agreement-field .mat-mdc-form-field-focus-overlay {
+  background: transparent !important;
+}
+
