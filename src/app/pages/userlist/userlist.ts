@@ -11,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { Agreement } from '../../dto/Agreement';
 
 @Component({
   selector: 'app-userlist',
@@ -41,11 +42,16 @@ export class Userlist implements OnInit {
     paid: false,
     rejected:false
   };
-  agreements: any[] = [];
-  selectedAgreement: string = '';
+agreementsList: Agreement[] = [];
+selectedAgreementIds: number[] = [];
 
   statusCtrl = new FormControl<number[]>([]);
 statusSearchCtrl = new FormControl('');
+
+agreementCtrl = new FormControl<number[]>([]);
+agreementSearchCtrl = new FormControl('');
+
+filteredAgreements: Agreement[] = [];
 
 statuses = [
   { id: 1, name: 'Pendiente' },
@@ -59,21 +65,43 @@ filteredStatuses = [...this.statuses];
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.getUsers();
+  this.getUsers();
+  this.getAgreements();
 
-     // 🔍 Buscar dentro del dropdown
-  this.statusSearchCtrl.valueChanges.subscribe(value => {
+  // 🔍 buscador agreements
+  this.agreementSearchCtrl.valueChanges.subscribe(value => {
     const filter = (value || '').toLowerCase();
-    this.filteredStatuses = this.statuses.filter(s =>
-      s.name.toLowerCase().includes(filter)
+    this.filteredAgreements = this.agreementsList.filter(a =>
+      a.name.toLowerCase().includes(filter)
     );
   });
 
-  // 🔗 Conectar dropdown con tus activeFilters
-  this.statusCtrl.valueChanges.subscribe(values => {
-    this.syncDropdownToFilters(values ?? []);
+  // 🔗 conectar dropdown agreements con filtro
+  this.agreementCtrl.valueChanges.subscribe(values => {
+    this.selectedAgreementIds = values ?? [];
   });
+}
+
+onAgreementSelectOpened(opened: boolean) {
+  if (!opened) {
+    this.agreementSearchCtrl.setValue('');
   }
+}
+
+ getAgreements(): void {
+  this.http
+    .get<Agreement[]>(`${this.baseUrl}/Agreement/GetAllAgreements`)
+    .subscribe({
+      next: (res) => {
+        this.agreementsList = res;
+        this.filteredAgreements = [...res];
+      },
+      error: (err) => {
+        console.error('Error cargando agreements', err);
+      }
+    });
+}
+
 
   syncDropdownToFilters(selectedIds: number[]) {
   this.activeFilters.pending   = selectedIds.includes(1);
@@ -120,31 +148,45 @@ trackByUserId(index: number, user: any) {
   console.log(this.activeFilters);
 }
 
-  get filteredUsers() {
-    const selectedStatuses: number[] = [];
+get filteredUsers() {
+  const selectedStatuses: number[] = [];
 
-    if (this.activeFilters.pending) selectedStatuses.push(1);
-    if (this.activeFilters.review) selectedStatuses.push(3);
-    if (this.activeFilters.paid) selectedStatuses.push(2);
-     if (this.activeFilters.rejected) selectedStatuses.push(4);
+  if (this.activeFilters.pending) selectedStatuses.push(1);
+  if (this.activeFilters.review) selectedStatuses.push(3);
+  if (this.activeFilters.paid) selectedStatuses.push(2);
+  if (this.activeFilters.rejected) selectedStatuses.push(4);
 
-    // si no hay filtros activos → mostrar todo
-    if (selectedStatuses.length === 0) {
-      return this.userList;
-    }
+  const hasStatusFilter = selectedStatuses.length > 0;
+  const hasAgreementFilter = this.selectedAgreementIds.length > 0;
 
-    return this.userList
-    .map(user => ({
-      ...user,
-      messages: (user.messages ?? []).filter(
-        (msg: any) =>
-          msg &&
-          typeof msg.paymentStatusId === 'number' &&
-          selectedStatuses.includes(msg.paymentStatusId)
-      )
-    }))
+  return this.userList
+    .map(user => {
+      const filteredMessages = (user.messages ?? []).filter((msg: any) => {
+
+        if (!msg) return false;
+
+        // 1️⃣ filtro por estado
+        const statusMatch =
+          !hasStatusFilter ||
+          (typeof msg.paymentStatusId === 'number' &&
+           selectedStatuses.includes(msg.paymentStatusId));
+
+        // 2️⃣ filtro por agreement
+        const agreementMatch =
+          !hasAgreementFilter ||
+          this.selectedAgreementIds.includes(msg.agreementId);
+
+        return statusMatch && agreementMatch;
+      });
+
+      return {
+        ...user,
+        messages: filteredMessages
+      };
+    })
     .filter(user => user.messages.length > 0);
-  }
+}
+
 
   getUsers(): void {
     this.http
@@ -257,18 +299,6 @@ syncData() {
   this.getUsers();
 }
 
-onAgreementChange(event: Event) {
-  const value = (event.target as HTMLSelectElement).value;
-  this.selectedAgreement = value;
 
-  this.applyFilters();
-}
-
-applyFilters() {
-  // this.filteredUsers = this.users.filter(user =>
-  //   !this.selectedAgreement ||
-  //   user.agreementName === this.selectedAgreement
-  // );
-}
 
 }
