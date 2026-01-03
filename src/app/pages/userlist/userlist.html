@@ -3,6 +3,35 @@
 <!-- ========================= -->
 <div class="filters-bar">
 
+   <!-- 🔽 Dropdown multiselect con búsqueda -->
+  <mat-form-field appearance="outline" class="filter-select">
+    <mat-label>Estados</mat-label>
+
+    <mat-select
+      [formControl]="statusCtrl"
+      multiple
+      (openedChange)="onSelectOpened($event)"
+    >
+
+      <!-- 🔍 Buscador -->
+      <mat-option>
+        <ngx-mat-select-search
+          [formControl]="statusSearchCtrl"
+          placeholderLabel="Buscar estado..."
+          noEntriesFoundLabel="Sin resultados">
+        </ngx-mat-select-search>
+      </mat-option>
+
+      <!-- Opciones -->
+      <mat-option
+        *ngFor="let status of filteredStatuses"
+        [value]="status.id">
+        {{ status.name }}
+      </mat-option>
+
+    </mat-select>
+  </mat-form-field>
+
   <div class="filters">
     <button
       type="button"

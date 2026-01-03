@@ -6,7 +6,11 @@ import { UsersModificationResultDto } from '../../dto/UsersModificationResultDto
 import { environment } from './../../../environments/environment'
 import { FormsModule } from '@angular/forms';
 
-
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 @Component({
   selector: 'app-userlist',
@@ -14,7 +18,12 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    NgxMatSelectSearchModule
   ],
   templateUrl: './userlist.html',
   styleUrl: './userlist.css'
@@ -35,11 +44,67 @@ export class Userlist implements OnInit {
   agreements: any[] = [];
   selectedAgreement: string = '';
 
+  statusCtrl = new FormControl<number[]>([]);
+statusSearchCtrl = new FormControl('');
+
+statuses = [
+  { id: 1, name: 'Pendiente' },
+  { id: 3, name: 'En revisión' },
+  { id: 2, name: 'Pagado' },
+  { id: 4, name: 'Rechazado' }
+];
+
+filteredStatuses = [...this.statuses];
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.getUsers();
+
+     // 🔍 Buscar dentro del dropdown
+  this.statusSearchCtrl.valueChanges.subscribe(value => {
+    const filter = (value || '').toLowerCase();
+    this.filteredStatuses = this.statuses.filter(s =>
+      s.name.toLowerCase().includes(filter)
+    );
+  });
+
+  // 🔗 Conectar dropdown con tus activeFilters
+  this.statusCtrl.valueChanges.subscribe(values => {
+    this.syncDropdownToFilters(values ?? []);
+  });
   }
+
+  syncDropdownToFilters(selectedIds: number[]) {
+  this.activeFilters.pending   = selectedIds.includes(1);
+  this.activeFilters.review    = selectedIds.includes(3);
+  this.activeFilters.paid      = selectedIds.includes(2);
+  this.activeFilters.rejected  = selectedIds.includes(4);
+}
+
+toggleFilters(filter: 'pending' | 'review' | 'paid' | 'rejected') {
+  this.activeFilters[filter] = !this.activeFilters[filter];
+
+  const map: any = {
+    pending: 1,
+    review: 3,
+    paid: 2,
+    rejected: 4
+  };
+
+  const selected = Object.entries(this.activeFilters)
+    .filter(([_, active]) => active)
+    .map(([key]) => map[key]);
+
+  this.statusCtrl.setValue(selected, { emitEvent: false });
+}
+
+onSelectOpened(opened: boolean) {
+  if (!opened) {
+    this.statusSearchCtrl.setValue('');
+  }
+}
+
 
 
 trackByMessageId(index: number, msg: any) {
