@@ -553,6 +553,8 @@ mat-option input {
 .agreement-field {
   min-width: 300px;
   margin-right: 16px;
+  margin-left: 20px;
+  height: 60px;
 }
 
 .agreement-field .mat-mdc-text-field-wrapper {

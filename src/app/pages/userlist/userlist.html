@@ -123,6 +123,7 @@
       <th>Nombre</th>
       <th>Número</th>
       <th>Mensaje</th>
+      <th>Placa</th>
       <th>Estado</th>
       <th>Foto</th>
       <th>Seleccionar</th>
@@ -139,8 +140,8 @@
 
           <td>{{ user.name }}</td>
           <td>{{ user.ws_Id }}</td>
-          <td>{{ msg.text || '—' }}</td>
-
+          <td>{{ msg.text || 'Sin comentarios' }}</td>
+          <td>{{ msg.plateVehicle || '—' }}</td>
           <td>
             <span
               class="badge"
