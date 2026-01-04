@@ -295,10 +295,22 @@ clearSelections(): void {
 }
 
 syncData() {
-  debugger;
   this.getUsers();
 }
 
+handleRejectedMessage(msg: any) {
+  console.log('Mensaje rechazado:', msg);
 
+  this.http.post(`${this.baseUrl}/Message/ApproveMessage?id=${msg.id}`,null)
+    .subscribe({
+      next: () => {
+        console.log('Mensajes marcados como aprobados');
+         this.getUsers();
+      },
+      error: (err) => {
+        console.error('Error marcando mensajes', err);
+      }
+    });
+}
 
 }

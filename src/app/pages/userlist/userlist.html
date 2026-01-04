@@ -127,6 +127,7 @@
       <th>Estado</th>
       <th>Foto</th>
       <th>Seleccionar</th>
+      <th>Acción</th> 
     </tr>
   </thead>
 
@@ -180,6 +181,16 @@
 
             <ng-template #noCheckbox></ng-template>
           </td>
+          <td class="action-cell">
+          <ng-container *ngIf="msg.paymentStatusId === 4">
+            <button
+              type="button"
+              class="btn-rejected-action"
+              (click)="handleRejectedMessage(msg)">
+              Aprobar
+            </button>
+          </ng-container>
+        </td>
         </tr>
       </ng-container>
     </ng-container>

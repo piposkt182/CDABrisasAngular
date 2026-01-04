@@ -795,3 +795,33 @@ mat-option input {
   background: transparent !important;
 }
 
+/* ============================= */
+/* BOTÓN ACCIÓN – REJECTED */
+/* ============================= */
+
+.action-cell {
+  text-align: center;
+}
+
+.btn-rejected-action {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1.5px solid #b42318;
+  background: #fdecea;
+  color: #b42318;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+.btn-rejected-action:hover {
+  background: rgba(180, 35, 24, 0.15);
+  box-shadow: 0 0 0 4px rgba(180, 35, 24, 0.12);
+}
+
+/* Active */
+.btn-rejected-action:active {
+  transform: scale(0.97);
+}
