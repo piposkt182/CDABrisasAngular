@@ -126,7 +126,7 @@
       <th>Placa</th>
       <th>Estado</th>
       <th>Foto</th>
-      <th>Seleccionar</th>
+      <th *ngIf="showCheckColumn">Seleccionar</th>
      <th *ngIf="showActionColumn">Rechazados</th>
     </tr>
   </thead>
@@ -170,7 +170,7 @@
 
             <ng-template #noImage>—</ng-template>
           </td>
-          <td class="select-cell">
+          <td class="select-cell" *ngIf="showCheckColumn">
             <ng-container *ngIf="msg.paymentStatusId !== 2 && msg.paymentStatusId !== 1  && msg.paymentStatusId !== 4; else noCheckbox">
               <input
                 type="checkbox"

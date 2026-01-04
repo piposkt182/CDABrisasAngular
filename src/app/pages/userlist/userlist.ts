@@ -45,6 +45,7 @@ export class Userlist implements OnInit {
 agreementsList: Agreement[] = [];
 selectedAgreementIds: number[] = [];
 showActionColumn = false;
+showCheckColumn = false;
 statusCtrl = new FormControl<number[]>([]);
 statusSearchCtrl = new FormControl('');
 
@@ -60,7 +61,7 @@ filteredAgreements: Agreement[] = [];
   this.getUsers();
   this.getAgreements();
 
-  // 🔍 buscador agreements
+  
   this.agreementSearchCtrl.valueChanges.subscribe(value => {
     const filter = (value || '').toLowerCase();
     this.filteredAgreements = this.agreementsList.filter(a =>
@@ -83,6 +84,12 @@ onAgreementSelectOpened(opened: boolean) {
 private updateActionColumnVisibility(): void {
   this.showActionColumn = this.userList.some(user =>
     user.messages?.some((msg: Message) => msg.paymentStatus?.id === 4) ?? false
+  );
+}
+
+private checkColumnVisibility(): void {
+  this.showCheckColumn = this.userList.some(user =>
+    user.messages?.some((msg: Message) => msg.paymentStatus?.id === 3) ?? false
   );
 }
 
@@ -192,6 +199,7 @@ get filteredUsers() {
       .subscribe(res => {
         this.userList = res.users;
          this.updateActionColumnVisibility();
+         this.checkColumnVisibility();
       });
   }
 
@@ -221,7 +229,7 @@ get filteredUsers() {
 
   this.uploadAgreementExcel(file).subscribe({
     next: (res) => {
-      this.userList = res.users;
+       this.getUsers();
       if(res.hasChanges){
         // 🔔 SUCCESS
         this.uploadStatus = 'success';
