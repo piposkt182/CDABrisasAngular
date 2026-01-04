@@ -127,7 +127,7 @@
       <th>Estado</th>
       <th>Foto</th>
       <th>Seleccionar</th>
-      <th>Acción</th> 
+     <th *ngIf="showActionColumn">Rechazados</th>
     </tr>
   </thead>
 
@@ -171,7 +171,7 @@
             <ng-template #noImage>—</ng-template>
           </td>
           <td class="select-cell">
-            <ng-container *ngIf="msg.paymentStatusId !== 2 && msg.paymentStatusId !== 1; else noCheckbox">
+            <ng-container *ngIf="msg.paymentStatusId !== 2 && msg.paymentStatusId !== 1  && msg.paymentStatusId !== 4; else noCheckbox">
               <input
                 type="checkbox"
                 class="row-checkbox"
@@ -181,7 +181,7 @@
 
             <ng-template #noCheckbox></ng-template>
           </td>
-          <td class="action-cell">
+          <td class="action-cell" *ngIf="showActionColumn">
           <ng-container *ngIf="msg.paymentStatusId === 4">
             <button
               type="button"

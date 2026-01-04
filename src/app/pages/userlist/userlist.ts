@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UsersModificationResultDto } from '../../dto/UsersModificationResultDto';
+import { Message, UsersModificationResultDto } from '../../dto/UsersModificationResultDto';
 import { environment } from './../../../environments/environment'
 import { FormsModule } from '@angular/forms';
 
@@ -44,8 +44,8 @@ export class Userlist implements OnInit {
   };
 agreementsList: Agreement[] = [];
 selectedAgreementIds: number[] = [];
-
-  statusCtrl = new FormControl<number[]>([]);
+showActionColumn = false;
+statusCtrl = new FormControl<number[]>([]);
 statusSearchCtrl = new FormControl('');
 
 agreementCtrl = new FormControl<number[]>([]);
@@ -53,14 +53,6 @@ agreementSearchCtrl = new FormControl('');
 
 filteredAgreements: Agreement[] = [];
 
-statuses = [
-  { id: 1, name: 'Pendiente' },
-  { id: 3, name: 'En revisión' },
-  { id: 2, name: 'Pagado' },
-  { id: 4, name: 'Rechazado' }
-];
-
-filteredStatuses = [...this.statuses];
 
   constructor(private http: HttpClient) {}
 
@@ -86,6 +78,12 @@ onAgreementSelectOpened(opened: boolean) {
   if (!opened) {
     this.agreementSearchCtrl.setValue('');
   }
+}
+
+private updateActionColumnVisibility(): void {
+  this.showActionColumn = this.userList.some(user =>
+    user.messages?.some((msg: Message) => msg.paymentStatus?.id === 4) ?? false
+  );
 }
 
  getAgreements(): void {
@@ -193,6 +191,7 @@ get filteredUsers() {
       .get<UsersModificationResultDto>(`${this.baseUrl}/User/GetAllUsersWithMessages`)
       .subscribe(res => {
         this.userList = res.users;
+         this.updateActionColumnVisibility();
       });
   }
 
