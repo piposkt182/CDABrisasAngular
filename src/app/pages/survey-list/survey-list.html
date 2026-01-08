@@ -1,0 +1,41 @@
+<!-- ========================= -->
+<!-- Filtros -->
+<!-- ========================= -->
+<div class="filters-bar">
+
+<!-- ========================= -->
+<!-- Tabla de usuarios -->
+<!-- ========================= -->
+<table class="users-table">
+  <thead>
+    <tr>
+      <th>WhatsApp</th>
+      <th>Fecha</th>
+      <th>Servicio</th>
+      <th>Canal</th>
+      <th>¿Volverías?</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    @for (item of responses; track item.id) {
+      <tr>
+        <td>{{ item.whatsappNumber }}</td>
+
+        <td>{{ formatDate(item.dateCreated) }}</td>
+
+        <td>{{ item.field1 }}</td>
+       <td>{{ getChannelText(item.field2) }}</td>
+
+        <td>
+          <span class="status {{ item.field3 === '1' ? 'yes' : 'no' }}">
+            {{ item.field3 === '1' ? 'Sí' : 'No' }}
+          </span>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+
+
