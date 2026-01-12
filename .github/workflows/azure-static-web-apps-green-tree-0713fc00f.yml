@@ -4,21 +4,15 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
 
 jobs:
   build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
 
     steps:
       - uses: actions/checkout@v4
 
-      # 🔑 USAMOS NODE 20 (OBLIGATORIO PARA ANGULAR 20)
       - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
@@ -28,31 +22,11 @@ jobs:
         run: npm install
 
       - name: Build Angular
-        run: npm run build
+        run: npm run build -- --configuration production
 
-      # 🚀 SOLO SUBIMOS LOS ARCHIVOS YA COMPILADOS
       - name: Deploy to Azure Static Web Apps
         uses: Azure/static-web-apps-deploy@v1
         with:
-            azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_GREEN_TREE_0713FC00F }}
-            repo_token: ${{ secrets.GITHUB_TOKEN }}
-            action: upload
-        
-            # 🔑 RUTA CORRECTA SEGÚN TU DIST/
-            app_location: "dist/CDABrisas/browser"
-            api_location: ""
-            skip_app_build: true
-
-  close_pull_request_job:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    name: Close Pull Request Job
-
-    steps:
-      - name: Close Pull Request
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_GREEN_TREE_0713FC00F }}
-          action: close
-
-
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          app_location: "/"                # raíz del repo
+          output_location: "dist/CDABrisas/browser"   # 👈 CRÍTICO
