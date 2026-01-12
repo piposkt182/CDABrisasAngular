@@ -5,14 +5,13 @@
 
  <!-- 🔽 Dropdown multiselect AGREEMENTS -->
 <mat-form-field appearance="outline" class="filter-select agreement-field">
- <mat-label class="static-label">Convenios</mat-label>
+  <mat-label>Convenios</mat-label>
 
   <mat-select
     [formControl]="agreementCtrl"
     multiple
     (openedChange)="onAgreementSelectOpened($event)"
   >
-
     <!-- 🔍 Buscador -->
     <mat-option>
       <ngx-mat-select-search
@@ -126,7 +125,7 @@
       <th>Placa</th>
       <th>Estado</th>
       <th>Foto</th>
-      <th *ngIf="showCheckColumn">Seleccionar</th>
+      <th class="textcenter" *ngIf="showCheckColumn">Seleccionar</th>
      <th *ngIf="showActionColumn">Rechazados</th>
     </tr>
   </thead>

@@ -123,7 +123,7 @@ tbody tr:nth-child(even) {
   /* margin-right:auto;  */
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
 }
 
 
